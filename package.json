@@ -1,0 +1,26 @@
+{
+  "name": "leaflet-study-case",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/lsboissard/leaflet-study-case#readme",
+  "bugs": {
+    "url": "https://github.com/lsboissard/leaflet-study-case/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lsboissard/leaflet-study-case.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@tailwindcss/cli": "^4.1.4",
+    "jquery": "^3.7.1",
+    "leaflet": "^1.9.4",
+    "tailwindcss": "^4.1.4"
+  }
+}
