@@ -75,9 +75,41 @@ export var MapModule = {
       select.append(`<option value="${city.id}">${city.nome}</option>`);
     });
   },
+  loadStateGeoJson: async function (stateId) {
+    try {
+      const url = `https://servicodados.ibge.gov.br/api/v4/malhas/estados/${stateId}?formato=application/vnd.geo+json`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Erro ao carregar GeoJSON do estado');
+
+      const geoJson = await response.json();
+
+      // Remove camada anterior, se existir
+      if (this.geoLayer) {
+        this.map.removeLayer(this.geoLayer);
+      }
+
+      // Adiciona novo GeoJSON
+      this.geoLayer = L.geoJSON(geoJson, {
+        style: {
+          color: '#28a745',
+          weight: 2,
+          fillOpacity: 0.2
+        }
+      }).addTo(this.map);
+
+      // Ajusta zoom para o estado
+      this.map.fitBounds(this.geoLayer.getBounds(), {
+        maxZoom: 7,
+        padding: [20, 20]
+      });
+
+    } catch (error) {
+      console.error('Erro ao carregar estado no mapa:', error);
+    }
+  },
   loadCityGeoJson: async function (cityId) {
     try {
-      const url = `https://servicodados.ibge.gov.br/api/v2/malhas/${cityId}?formato=application/vnd.geo+json`;
+      const url = `https://servicodados.ibge.gov.br/api/v4/malhas/municipios/${cityId}?formato=application/vnd.geo+json`;
       const response = await fetch(url);
       if (!response.ok) throw new Error('Erro ao carregar GeoJSON');
 
@@ -99,6 +131,7 @@ export var MapModule = {
 
       // Ajusta zoom para o município
       this.map.fitBounds(this.geoLayer.getBounds());
+      this.map.setZoom(9)
 
     } catch (error) {
       console.error('Erro ao carregar município no mapa:', error);
@@ -109,6 +142,7 @@ export var MapModule = {
       const stateId = e.target.value;
       if (stateId) {
         this.loadCities(stateId);
+        this.loadStateGeoJson(stateId);
         $('#cities, #cities-container').removeClass('hidden');
       }
     });
