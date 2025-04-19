@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaflet Study Case</title>
+  <link rel="stylesheet" href="/libs/leaflet/leaflet.css" />
+  <script src="/libs/leaflet/leaflet.js"></script>
+
+  <style>
+    .container {
+      display: flex;
+      height: 100vh;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #map {
+      width: 1024px;
+      height: 512px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="map"></div>
+  </div>
+</body>
+
+<script>
+  const brasilCenter = [-14.2350, -51.9253];
+
+  const brasilBounds = [
+    [-34.0, -74.0], // sudoeste
+    [5.5, -32.0]    // nordeste
+  ];
+
+  const map = L.map('map', {
+    center: brasilCenter,
+    zoom: 4,
+    minZoom: 4,
+    maxZoom: 19,
+    // maxBounds: brasilBounds,
+    // maxBoundsViscosity: 1.0
+  });
+
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OSM</a>',
+    attributionControl: true
+  }).addTo(map);
+
+  map.attributionControl.setPrefix('');
+
+  /**
+   * Loads GeoJSON data from IBGE API for states or cities
+   * @param {string} id - The state or city ID code
+   * @param {('state'|'city')} type - Type of geographic data to fetch
+   */
+  async function loadGeoJSON(id, type = 'city') {
+    try {
+      const url = {
+        state: `https://servicodados.ibge.gov.br/api/v4/malhas/estados/${id}?formato=application/vnd.geo+json`,
+        city: `https://servicodados.ibge.gov.br/api/v4/malhas/municipios/${id}?formato=application/vnd.geo+json`
+      }
+      const response = await fetch(url[type]);
+      if (!response.ok) {
+        throw new Error(`Error fetching data: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Error loading GeoJSON:', error);
+      throw error;
+    }
+  }
+</script>
+
+</html>
