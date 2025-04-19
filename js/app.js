@@ -52,6 +52,7 @@ var app = {
     const stateId = $('#states').val();
     if (stateId) {
       this.loadCities(stateId);
+      $('#cities, #cities-container').removeClass('hidden');
     } else {
       $('#cities').empty().append('<option value="">Selecione uma cidade</option>');
     }

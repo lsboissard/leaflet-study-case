@@ -12,13 +12,17 @@
   <link rel="stylesheet" href="/css/app.css">
 </head>
 
-<body>
-  <div class="container">
-    <div>
-      <select name="states" id="states" onchange="app.handleStateChange()"></select>
-      <select name="cities" id="cities"></select>
+<body class="flex h-screen items-center justify-center">
+  <div class="flex flex-col gap-3">
+    <div class="flex gap-3">
+      <div class="bg-slate-50 p-2 rounded-md">
+        <select name="states" id="states" onchange="app.handleStateChange()"></select>
+      </div>
+      <div class="bg-slate-50 p-2 rounded-md hidden" id="cities-container">
+        <select name="cities" id="cities" class="hidden"></select>
+      </div>
     </div>
-    <div id="map" class="w-[1024px] h-[512px]"></div>
+    <div id="map" class="w-[1024px] h-[512px] rounded-md"></div>
   </div>
 </body>
 
