@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/node_modules/leaflet/dist/leaflet.css" />
   <script src="/node_modules/leaflet/dist/leaflet.js"></script>
   <script src="/node_modules/jquery/dist/jquery.js"></script>
-  <script src="/js/app.js"></script>
+  <script type="module" src="/js/app.js"></script>
   <link rel="stylesheet" href="/css/app.css">
 </head>
 
@@ -16,7 +16,7 @@
   <div class="flex flex-col gap-3">
     <div class="flex gap-3">
       <div class="bg-slate-50 p-2 rounded-md">
-        <select name="states" id="states" onchange="app.handleStateChange()"></select>
+        <select name="states" id="states"></select>
       </div>
       <div class="bg-slate-50 p-2 rounded-md hidden" id="cities-container">
         <select name="cities" id="cities" class="hidden"></select>
@@ -25,54 +25,5 @@
     <div id="map" class="w-[1024px] h-[512px] rounded-md"></div>
   </div>
 </body>
-
-<script>
-  const brasilCenter = [-14.2350, -51.9253];
-
-  const brasilBounds = [
-    [-34.0, -74.0], // sudoeste
-    [5.5, -32.0]    // nordeste
-  ];
-
-  const map = L.map('map', {
-    center: brasilCenter,
-    zoom: 4,
-    minZoom: 4,
-    maxZoom: 19,
-    // maxBounds: brasilBounds,
-    // maxBoundsViscosity: 1.0
-  });
-
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OSM</a>',
-    attributionControl: true
-  }).addTo(map);
-
-  map.attributionControl.setPrefix('');
-
-  /**
-   * Loads GeoJSON data from IBGE API for states or cities
-   * @param {string} id - The state or city ID code
-   * @param {('state'|'city')} type - Type of geographic data to fetch
-   */
-  async function loadGeoJSON(id, type = 'city') {
-    try {
-      const url = {
-        state: `https://servicodados.ibge.gov.br/api/v4/malhas/estados/${id}?formato=application/vnd.geo+json`,
-        city: `https://servicodados.ibge.gov.br/api/v4/malhas/municipios/${id}?formato=application/vnd.geo+json`
-      }
-      const response = await fetch(url[type]);
-      if (!response.ok) {
-        throw new Error(`Error fetching data: ${response.statusText}`);
-      }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error loading GeoJSON:', error);
-      throw error;
-    }
-  }
-</script>
 
 </html>
